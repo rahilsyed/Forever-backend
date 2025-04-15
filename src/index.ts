@@ -13,8 +13,10 @@ connectDB();
 connectCloudinary();
 //middlewares
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({
+  exposedHeaders: ['token'],
+  allowedHeaders: ['token', 'Content-Type', 'Authorization']
+}));
 //api endpoints
 app.use('/api/users', router);
 app.use('/api/products', productRouter);

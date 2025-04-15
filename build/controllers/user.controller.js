@@ -18,6 +18,9 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config();
+const createToken = (id) => {
+    return jsonwebtoken_1.default.sign({ id }, process.env.SECRET_KEY);
+};
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password } = req.body;
@@ -53,11 +56,9 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!isMatch) {
             return res.status(400).json({ msg: 'incorrect Password' });
         }
-        const token = jsonwebtoken_1.default.sign({ email: user.email }, process.env.SECRET_KEY, {
-            expiresIn: '1h',
-        });
+        const token = createToken(user._id);
         res.cookie('jwt', token);
-        res.json({ token, email });
+        res.status(200).json({ token, email });
     }
     catch (err) {
         res.status(500).json({ msg: 'error' });

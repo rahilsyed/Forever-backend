@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const orderSchema = new mongoose_1.Schema({
-    orderId: {
+    userId: {
         type: String,
-        required: true,
     },
     items: {
         type: [],

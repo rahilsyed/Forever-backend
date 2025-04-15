@@ -12,16 +12,16 @@ import authUser from '../middleware/auth';
 
 const orderRouter = Router();
 
-orderRouter.post('/list', adminAuth, allOrders);
+orderRouter.post('/list', allOrders);
 orderRouter.post('/status', adminAuth, updateStatus);
 
 //payment method
 
-orderRouter.post('/place', placeOrder);
+orderRouter.post('/place',authUser,  placeOrder);
 orderRouter.post('/stripe', authUser, placeOrderStripe);
 orderRouter.post('/razorpay', authUser, placeOrderRazorpay);
 
 //user order
-orderRouter.post('/userorders', adminAuth, userOrders);
+orderRouter.post('/userorders', authUser, userOrders);
 
 export default orderRouter;

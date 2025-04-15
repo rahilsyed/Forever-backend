@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,19 +6,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const authUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const authUser = (req, res, next) => {
     const { token } = req.headers;
+    //   console.log("token"+token)
     if (!token) {
-        res.status(401).json({ success: false, messege: 'Unauthorized user' });
+        res.status(401).json({ success: false, message: 'Unauthorized' });
         return;
     }
     try {
-        const decode_token = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
-        req.body.userId = decode_token.id;
+        const token_decode = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
+        //   console.log(token_decode)
+        //   console.log("this is token"+(token_decode as JwtPayload).id)
+        req.body.userId = token_decode.id;
+        console.log(req.body.userId);
         next();
     }
-    catch (err) {
-        res.status(401).json({ success: false, message: 'Invalid token' });
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+        return;
     }
-});
+};
 exports.default = authUser;

@@ -18,7 +18,10 @@ const app = (0, express_1.default)();
 (0, cloudnary_1.default)();
 //middlewares
 app.use(express_1.default.json());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    exposedHeaders: ['token'],
+    allowedHeaders: ['token', 'Content-Type', 'Authorization']
+}));
 //api endpoints
 app.use('/api/users', user_route_1.default);
 app.use('/api/products', product_route_1.default);

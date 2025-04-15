@@ -1,9 +1,9 @@
 import {Schema, model} from "mongoose";
 import { IOrderData } from "../Interfaces/db.interface";
 const orderSchema = new Schema<IOrderData>({
-    orderId:{
+    userId:{
         type: String,
-        required : true,
+      
     },
     items:{
         type: [],

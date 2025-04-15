@@ -5,6 +5,10 @@ import dotenv from 'dotenv';
 import JWT from 'jsonwebtoken';
 
 dotenv.config();
+
+const createToken = (id: any) => {
+  return JWT.sign({ id }, process.env.SECRET_KEY as string)
+}
 export const registerUser = async (
   req: Request,
   res: Response
@@ -42,15 +46,10 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     if (!isMatch) {
       return res.status(400).json({ msg: 'incorrect Password' });
     }
-    const token = JWT.sign(
-      { email: user.email },
-      process.env.SECRET_KEY as string,
-      {
-        expiresIn: '1h',
-      }
-    );
+    const token = createToken(user._id)
+   
     res.cookie('jwt', token);
-    res.json({ token, email });
+    res.status(200).json({ token, email });
   } catch (err) {
     res.status(500).json({ msg: 'error' });
   }

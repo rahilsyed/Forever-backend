@@ -38,7 +38,7 @@ export interface IProductData {
 
 
 export interface IOrderData{
-    orderId: string,
+    userId: string,
     items: [],
     amount: number,
     address:object,

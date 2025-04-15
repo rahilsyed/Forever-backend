@@ -27,7 +27,7 @@ const productSchema = new Schema<IProduct>(
       required: true,
     },
     sizes: {
-      type: [Array],
+      type: [],
       required: true,
     },
     bestSeller: {

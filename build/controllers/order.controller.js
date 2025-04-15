@@ -21,25 +21,23 @@ const deliveryCharges = 40;
 const placeOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, items, amount, address } = req.body;
-        // Ensure to include paymentMode and orderId
-        const orderData = yield order_model_1.default.create({
+        const orderData = {
             userId,
             items,
             amount,
             address,
-            paymentMode: 'COD', // Add paymentMode
-            orderId: Date.now().toString(), // Generate a unique orderId (or use your own logic)
+            paymentMode: 'COD',
             payment: false,
-            date: Date.now(),
-        });
+            date: Date.now()
+        };
         const newOrder = new order_model_1.default(orderData);
-        yield newOrder.save(); // Ensure you await the save operation
+        yield newOrder.save();
         yield user_model_1.default.findByIdAndUpdate(userId, { cartData: {} });
-        res.status(200).json({ success: true, data: orderData });
+        res.json({ success: true, message: 'Order Placed Successfully' });
     }
     catch (error) {
-        console.error('Error placing order:', error); // Log the error for debugging
-        res.status(404).json({ success: false, message: error || 'Error placing order' });
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 });
 exports.placeOrder = placeOrder;
@@ -51,12 +49,12 @@ const placeOrderRazorpay = (req, res) => __awaiter(void 0, void 0, void 0, funct
 exports.placeOrderRazorpay = placeOrderRazorpay;
 const allOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const order = yield order_model_1.default.find({});
-        res.status(200).json({ success: true, data: order });
+        const orders = yield order_model_1.default.find({});
+        res.json({ success: true, orders });
     }
-    catch (err) {
-        console.log(err);
-        res.status(404).json({ success: false, data: null });
+    catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 });
 exports.allOrders = allOrders;
@@ -64,11 +62,11 @@ const userOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const { userId } = req.body;
         const orders = yield order_model_1.default.find({ userId });
-        res.status(200).json({ success: true, data: orders });
+        res.json({ success: true, orders });
     }
     catch (error) {
         console.log(error);
-        res.status(400).json({ success: false, data: null });
+        res.json({ success: false, message: error.message });
     }
 });
 exports.userOrders = userOrders;
@@ -76,11 +74,12 @@ exports.userOrders = userOrders;
 const updateStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { orderId, status } = req.body;
-        yield order_model_1.default.findOneAndUpdate(orderId, { status });
-        res.status(200).json({ success: true, messege: 'Status Updated' });
+        yield order_model_1.default.findByIdAndUpdate(orderId, { status });
+        res.json({ success: true, message: 'Status Updated' });
     }
-    catch (err) {
-        res.status(404).json({ messege: err });
+    catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 });
 exports.updateStatus = updateStatus;
